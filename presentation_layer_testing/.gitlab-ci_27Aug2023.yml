@@ -1,0 +1,141 @@
+---
+default:
+  tags:
+    - dev
+  services:
+    - name: pipeship-docker-release-local.bahnhub.tech.rz.db.de/cicred
+      alias: cicred-server
+
+variables:
+  GITLAB_URL: git.tech.rz.db.de
+  DOCKER_REGISTRY: docker-hub-remote.bahnhub.tech.rz.db.de
+  ARTIFACTORY_URL_DOCKER: rbltng-docker-stage-dev-local.bahnhub.tech.rz.db.de
+  DOCKER_IMAGE_FULL_PATH: $ARTIFACTORY_URL_DOCKER/$DOCKER_IMAGE_NAME
+  HTTP_PROXY: http://webproxy.comp.db.de:8080
+  HTTPS_PROXY: http://webproxy.comp.db.de:8080
+  http_proxy: $HTTP_PROXY
+  https_proxy: $HTTPS_PROXY
+  NO_PROXY: "169.254.169.254,docker:2375,docker:2376,.rz.db.de,localhost,127.0.0.1,.bahnhub.tech.rz.db.de,.amazonaws.com,.amazonlinux.com,.aws.com"
+  no_proxy: $NO_PROXY
+  TZ: "Europe/Berlin"
+  DOCKER_BUILD_ARGS: "--build-arg HTTP_PROXY=$HTTP_PROXY --build-arg HTTPS_PROXY=$HTTPS_PROXY --build-arg http_proxy=$HTTP_PROXY --build-arg https_proxy=$HTTPS_PROXY --build-arg NO_PROXY=$NO_PROXY --build-arg no_proxy=$no_proxy"
+  npm_config_cache: $CI_PROJECT_DIR/.npm
+  CYPRESS_CACHE_FOLDER: $CI_PROJECT_DIR/cache/Cypress
+
+stages:
+  - dockerTest
+  - dockerRelease
+  - install
+  - test
+
+.setCredentials:
+  services:
+    - name: pipeship-docker-release-local.bahnhub.tech.rz.db.de/cicred
+      alias: cicred-server
+  before_script:
+    - http_proxy="" && HTTP_PROXY="" && GL_TOKEN=$(curl -f 'cicred-server:8085/cicred/v1/aws/ssm/parameter-store/rbl/git/techuser-api/token')
+    - http_proxy="" && HTTP_PROXY="" && ARTIFACTORY_USER=$(curl -f 'cicred-server:8085/cicred/v1/aws/ssm/parameter-store/rbl/artifactory/technicalUser')
+    - http_proxy="" && HTTP_PROXY="" && ARTIFACTORY_PASSWORD=$(curl -f 'cicred-server:8085/cicred/v1/aws/ssm/parameter-store/rbl/artifactory/technicalUserPassword')
+    - http_proxy="" && HTTP_PROXY="" && ARTIFACTORY_TOKEN=$(curl -f 'cicred-server:8085/cicred/v1/aws/ssm/parameter-store/rbl/artifactory/technicalUserToken')
+    - mkdir -p $HOME/.docker
+    - echo $DOCKER_AUTH_CONFIG > $HOME/.docker/config.json
+
+# Builds the dockerfile and publishes it
+docker:test:
+  variables:
+    DOCKER_IMAGE_FULL_PATH_LATEST: "${DOCKER_IMAGE_FULL_PATH}:${CI_COMMIT_REF_SLUG}-latest"
+
+  stage: dockerTest
+  image: rbltng-docker-stage-dev-local.bahnhub.tech.rz.db.de/rbl-tng-ms-infrastructure-runner-node-18-cypress:1.0.0
+  timeout: 25m
+
+  extends:
+    - .setCredentials
+
+  script:
+    - export GL_URL="$GITLAB_URL"
+    - export GL_TOKEN
+    - export NPM_TOKEN=$ARTIFACTORY_TOKEN
+    - export DOCKER_BUILD_ARGS=$DOCKER_BUILD_ARGS
+    - export DOCKER_IMAGE_FULL_PATH=${DOCKER_IMAGE_FULL_PATH}
+    - export DOCKER_IMAGE_FULL_PATH_LATEST=${DOCKER_IMAGE_FULL_PATH_LATEST}
+    - docker build $DOCKER_BUILD_ARGS -t $DOCKER_IMAGE_FULL_PATH:0.0.1-test-only  -f ./Dockerfile .
+
+  tags:
+    - dev
+  rules:
+    - if: "$CI_COMMIT_TAG"
+      when: never
+    - if: '$CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH'
+      when: always
+
+
+# Builds the dockerfile and publishes it
+docker:release:
+  variables:
+    DOCKER_IMAGE_FULL_PATH_LATEST: "${DOCKER_IMAGE_FULL_PATH}:${CI_COMMIT_REF_SLUG}-latest"
+
+  stage: dockerRelease
+  image: rbltng-docker-stage-dev-local.bahnhub.tech.rz.db.de/rbl-tng-ms-infrastructure-runner-node-18-cypress:1.0.0
+  timeout: 25m
+
+  extends:
+    - .setCredentials
+
+  script:
+    - export GL_URL="$GITLAB_URL"
+    - export GL_TOKEN
+    - export NPM_TOKEN=$ARTIFACTORY_TOKEN
+    - export DOCKER_BUILD_ARGS=$DOCKER_BUILD_ARGS
+    - export DOCKER_IMAGE_FULL_PATH=${DOCKER_IMAGE_FULL_PATH}
+    - export DOCKER_IMAGE_FULL_PATH_LATEST=${DOCKER_IMAGE_FULL_PATH_LATEST}
+    - export CI_DEFAULT_BRANCH=$CI_DEFAULT_BRANCH
+    - npx semantic-release
+
+  tags:
+    - dev
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
+      when: on_success
+    - when: never
+
+before_script:
+  - export http_proxy=http://webproxy.comp.db.de:8080
+  - export https_proxy=http://webproxy.comp.db.de:8080
+
+cache:
+  key: $CI_COMMIT_SHA
+  paths:
+    - .npm
+    - cache/Cypress
+    - node_modules
+
+.install cypress:
+  stage: install
+  image: rbltng-docker-stage-dev-local.bahnhub.tech.rz.db.de/rbl-tng-ms-infrastructure-runner-node-18-cypress:1.0.0
+  script:
+    - npm ci
+    - npx cypress cache path
+    - npx cypress cache list
+    - npx cypress verify
+
+test:
+  stage: test
+  image: rbltng-docker-stage-dev-local.bahnhub.tech.rz.db.de/rbl-tng-ms-infrastructure-runner-node-18-cypress:1.0.0
+  script:
+    - npx browserslist@latest --update-db
+    # Run cypress tests
+    - npm ci   
+    - npx cypress cache path
+    - npx cypress cache list
+    - npx cypress verify
+    - npx cypress run --browser chrome --spec "cypress/e2e/*" --reporter mochawesome  --reporter-options reportDir=mochawesome-report,overwrite=false,html=false,json=true
+
+  artifacts:
+    expire_in: 30 days
+    when: always
+    paths:
+      - cypress/videos
+      - cypress/screenshots/**/*.png
+      - cypress/results
+      - cypress/screenshots

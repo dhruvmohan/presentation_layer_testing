@@ -1,0 +1,17 @@
+stages:
+    - test
+
+test:
+image: cypress/browsers:node12.14.1-chrome85-ff81
+stage: test
+script:
+    - npm install
+    - npm i --save-dev
+    - npx browserslist@latest --update-db
+    - npx cypress run --browser chrome 
+artifacts:
+when: always
+paths:
+    - cypress/videos/**/*.mp4
+    - cypress/screenshots/**/*.png
+expire_in: 1 day

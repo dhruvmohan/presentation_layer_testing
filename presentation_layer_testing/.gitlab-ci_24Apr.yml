@@ -1,0 +1,54 @@
+# first, install Cypress, then run all tests
+
+default:
+  tags:
+    - test
+    - dev
+  image: cypress/browsers:node16.16.0-chrome106-ff99-edge
+
+stages:
+  - install
+  - test
+
+before_script:
+  - export http_proxy=http://webproxy.comp.db.de:8080
+  - export https_proxy=http://webproxy.comp.db.de:8080
+
+variables:
+  npm_config_cache: $CI_PROJECT_DIR/.npm
+  CYPRESS_CACHE_FOLDER: $CI_PROJECT_DIR/cache/Cypress
+
+cache:
+  key: $CI_COMMIT_SHA
+  paths:
+    - .npm
+    - cache/Cypress
+    - node_modules
+
+.install cypress:
+  stage: install
+  script:
+    - npm ci
+    - npx cypress cache path
+    - npx cypress cache list
+    - npx cypress verify
+
+test:
+  stage: test
+  script:
+    - npx browserslist@latest --update-db
+    # Run cypress tests
+    - npm ci   
+    - npx cypress cache path
+    - npx cypress cache list
+    - npx cypress verify
+    - npx cypress run --browser chrome --spec "cypress/e2e/*" --reporter mochawesome  --reporter-options reportDir=mochawesome-report,overwrite=false,html=false,json=true
+
+  artifacts:
+    expire_in: 30 days
+    when: always
+    paths:
+      - cypress/videos
+      - cypress/screenshots/**/*.png
+      - cypress/results
+      - cypress/screenshots

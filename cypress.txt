@@ -1,0 +1,132 @@
+
+
+71-1776-6605-3301
+
+taramohan50@hpr.abdm
+Punjab@321
+
+————————————————————————————————————————————————————————————————————
+Cypress
+
+
+Open cypress GUI -  configure package.json and give command npm run cypress:open
+
+Run spec file from command prompt - npx cypress run --spec /Users/dhruvmohan/Downloads/CypressProject/cypress/e2e/spec.cy.js
+————————————————————————————————————————————————————————————————————
+
+Type scripts
+
+npm install typescript --save-dev
+
+npm install @typescript-eslint/eslint-plugin@latest --save-dev
+
+npx tsc
+————————————————————————————————————————————————————————————————————
+
+Cucumber
+
+Install plugin
+npm i @badeball/cypress-cucumber-preprocessor
+npm i @bahmutov/cypress-esbuild-preprocessor
+
+- setup cypress.config.js
+
+- configure .cypress-cucumber-preprocessorrc.json
+
+- create feature file and stepDefinitions folder and test files under that
+
+- Download plugin(BDD - Feature-Editor) to show BDD commands in different colours
+
+————————————————————————————————————————————————————————————————————
+
+
+mochawesome Reports
+
+install these 2 packages 
+
+npm install --save-dev mochawesome
+
+npm install mochawesome-merge --save-dev
+
+Run cypress tests and generate Mochaawesome results
+
+npx cypress run --spec "cypress/e2e/*"
+
+Run merge command to merge the tests
+
+npm run mochawersome:merge
+
+
+
+npx cypress run --spec cypress/e2e/TC_01.feature
+
+npm run mochawersome:merge
+
+- run test with reports configured
+
+npx cypress run --browser chrome --spec "cypress/e2e/*" --reporter mochawesome  --reporter-options reportDir=mochawesome-report,overwrite=false,html=false,json=true
+    
+
+
+
+————————————————————————————————————————————————————————————————————
+About access token
+
+Access code(front end)
+
+JWT token (application layer)
+
+Session token (backend)
+
+Session token required for frontend 
+
+Test user need for release env.
+
+————————————————————————————————————————————————————————————————————
+
+Obsolete commands
+
+npm run merge
+
+npm run generate_mochawesome_report
+
+npx cypress run --spec /Users/dhruvmohan/Downloads/CypressProject/cypress/e2e/spec.cy.js
+
+    "test": "echo \"Error: no test specified\" && exit 1",
+
+    "merge": "mochawesome-merge cypress/reports/*.json > cypress/reports/output.json",
+    "generate_mochawesome_report": "marge cypress/reports/output.json --reportDir ./ --inline",
+
+————————————————————————————————————————————————————————————————————
+
+Parallel testing
+
+npm run cy:parallel
+
+npm run mochawersome:merge
+
+
+npx
+
+npm run cy:parallel
+
+npm run mochawersome:merge	
+
+
+Websites
+
+Cucumber
+
+https://medium.com/@yusuferenayas/react-behavior-driven-development-with-cucumber-cypress-bdd-245edcfebf87
+https://www.toolsqa.com/cypress/bdd-automation-framework-in-cypress/
+https://blog.emumba.com/getting-started-with-cypress-10-and-cucumber-6b43ff68633b
+https://www.youtube.com/watch?v=FlQ9Carxeds
+https://blog.emumba.com/getting-started-with-cypress-10-and-cucumber-6b43ff68633b
+https://stackoverflow.com/questions/68845897/cypress-adding-cucumber
+https://www.npmjs.com/package/cypress-cucumber-preprocessor
+https://blog.emumba.com/getting-started-with-cypress-10-and-cucumber-6b43ff68633b
+
+Mochaaewsome
+https://www.halo-lab.com/blog/adding-cypress-screenshots-to-mochawesome
+
+————————————————————————————————————————————————————————————————————

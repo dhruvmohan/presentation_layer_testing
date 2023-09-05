@@ -1,0 +1,113 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 0,
+    "pending": 0,
+    "failures": 1,
+    "start": "2023-05-03T13:14:55.406Z",
+    "end": "2023-05-03T13:16:55.975Z",
+    "duration": 120569,
+    "testsRegistered": 1,
+    "passPercent": 0,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "2e30f618-e1cd-4c8d-9f4a-22fedebbc357",
+      "title": "",
+      "fullFile": "cypress/e2e/RBLTNG-1233_RBLTNG-1243.cy.js",
+      "file": "cypress/e2e/RBLTNG-1233_RBLTNG-1243.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "9ebc2f7c-fb52-4d6a-bb89-c49e53bdc122",
+          "title": "RBLTNG-1233_RBLTNG-1243",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "AK1_AK2_AK3_AK4___AK2_AK3",
+              "fullTitle": "RBLTNG-1233_RBLTNG-1243 AK1_AK2_AK3_AK4___AK2_AK3",
+              "timedOut": null,
+              "duration": 60322,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": "\"assets/RBLTNG-1233_RBLTNG-1243.cy.js/RBLTNG-1233_RBLTNG-1243 -- AK1_AK2_AK3_AK4___AK2_AK3 (failed) (attempt 2).png\"",
+              "code": "// Application URL should be accessible\ncy.visit(`${Cypress.config().baseUrl}/?`);\ncy.intercept({\n  method: 'POST',\n  path: '/api/v1'\n}).as('apiCheck1');\ncy.get('.websso-btn').click();\ncy.wait('@apiCheck1').then(({\n  response\n}) => {\n  expect(response.statusCode).to.eq(200);\n  FirstName = response.body.data.login.firstname;\n  LastName = response.body.data.login.lastname;\n  if (FirstName == '' || LastName == '') {\n    throw new Error(\"No User assigned\");\n  } else {\n    cy.log('User assigned is ' + FirstName + ' ' + LastName);\n  }\n  // cy.log(JSON.stringify(response.body.data.login.expirationTimestamp))\n  SessionexpirationTimestamp = response.body.data.login.expirationTimestamp;\n  const c = new Date(SessionexpirationTimestamp);\n  cy.log('Session expiration Timestamp is ' + c.toISOString());\n  refreshExpirationTimestamp = response.body.data.login.refreshExpirationTimestamp;\n  const d = new Date(refreshExpirationTimestamp);\n  cy.log('Refresh Expiration Timestamp is' + d.toISOString());\n  // const e = new Date(Date.now())\n  // cy.log(e.toISOString())\n  controlPointLocation = JSON.stringify(response.body.data.login.controlPointLocation);\n  if (controlPointLocation == '') {\n    throw new Error(\"No Leitstelle assigned to the user. Please check.\");\n  } else {\n    cy.log('The Leitstelle which the user assigned is' + controlPointLocation);\n  }\n});\ncy.get(\"[data-cy='SvgArrowDown']\").eq(0).click();\ncy.contains('Abmelden').click();\ncy.get('#usr-msg').should('contain', 'Erfolgreich abgemeldet');",
+              "err": {
+                "message": "CypressError: Timed out after waiting `60000ms` for your remote page to load.\n\nYour page did not fire its `load` event within `60000ms`.\n\nYou can try increasing the `pageLoadTimeout` value in `cypress.config.js` to wait longer.\n\nBrowsers will not fire the `load` event until all stylesheets and scripts are done downloading.\n\nWhen this `load` event occurs, Cypress will continue running commands.",
+                "estack": "CypressError: Timed out after waiting `60000ms` for your remote page to load.\n\nYour page did not fire its `load` event within `60000ms`.\n\nYou can try increasing the `pageLoadTimeout` value in `cypress.config.js` to wait longer.\n\nBrowsers will not fire the `load` event until all stylesheets and scripts are done downloading.\n\nWhen this `load` event occurs, Cypress will continue running commands.\nat timedOutWaitingForPageLoad (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:137295:72)\nat ../driver/src/cy/commands/navigation.ts/__webpack_exports__.default/visit (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:138269:16)\nat tryCatcher (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:8914:23)\nat ../../node_modules/bluebird/js/release/catch_filter.js/module.exports/catchFilter (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:4036:41)\nat tryCatcher (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:8914:23)\nat ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromiseFromHandler (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6849:31)\nat ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromise (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6906:18)\nat ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromise0 (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6951:10)\nat ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromises (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:7027:18)\nat _drainQueueStep (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:3621:12)\nat _drainQueue (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:3614:24)\nat ../../node_modules/bluebird/js/release/async.js/</Async.prototype._drainQueues (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:3630:16)\nat ../../node_modules/bluebird/js/release/async.js/</Async/this.drainQueues (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:3500:14)\nFrom Your Spec Code:\n    at ./cypress/e2e/RBLTNG-1233_RBLTNG-1243.cy.js/ (webpack:///./cypress/e2e/RBLTNG-1233_RBLTNG-1243.cy.js:39:7)\n    at ../driver/src/cypress/cy.ts/setRunnable/runnable.fn (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:151423:43)\n    at callFn (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:104964:21)\n    at ../driver/node_modules/mocha/lib/runnable.js/</Runnable.prototype.run (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:104951:13)\n    at ../driver/src/cypress/runner.ts/create/onRunnableRun (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:158412:30)\n    at finallyHandler (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:5468:23)\n    at tryCatcher (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:8914:23)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromiseFromHandler (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6849:31)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromise (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6906:18)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromise0 (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6951:10)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromises (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:7031:18)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._fulfill (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6975:18)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromise (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6919:21)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromise0 (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6951:10)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromises (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:7031:18)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._fulfill (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6975:18)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._resolveCallback (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6769:57)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromiseFromHandler (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6861:17)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromise (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6906:18)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromise0 (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6951:10)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromises (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:7031:18)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._fulfill (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6975:18)\n    at ../../node_modules/bluebird/js/release/promise_array.js/module.exports/PromiseArray.prototype._resolve (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:7248:19)\n    at ../../node_modules/bluebird/js/release/promise_array.js/module.exports/PromiseArray.prototype._promiseFulfilled (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:7266:14)\n    at ../../node_modules/bluebird/js/release/promise_array.js/module.exports/PromiseArray.prototype._iterate (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:7236:31)\n    at init (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:7200:10)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromise (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6903:21)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromise0 (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6951:10)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromises (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:7031:18)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._fulfill (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6975:18)\n    at ../../node_modules/bluebird/js/release/promise_array.js/module.exports/PromiseArray.prototype._resolve (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:7248:19)\n    at ../../node_modules/bluebird/js/release/promise_array.js/module.exports/PromiseArray.prototype._promiseFulfilled (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:7266:14)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromise (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6911:26)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromise0 (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6951:10)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromises (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:7031:18)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._fulfill (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6975:18)\n    at ../../node_modules/bluebird/js/release/promise_array.js/module.exports/PromiseArray.prototype._resolve (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:7248:19)\n    at ../../node_modules/bluebird/js/release/map.js/module.exports/MappingPromiseArray.prototype._promiseFulfilled (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6074:18)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromise (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6911:26)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromise0 (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:6951:10)\n    at ../../node_modules/bluebird/js/release/promise.js/</module.exports/Promise.prototype._settlePromises (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:7031:18)\n    at _drainQueueStep (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:3621:12)\n    at _drainQueue (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:3614:24)\n    at ../../node_modules/bluebird/js/release/async.js/</Async.prototype._drainQueues (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:3630:16)\n    at ../../node_modules/bluebird/js/release/async.js/</Async/this.drainQueues (https://rbl-tu1.rbl-test.comp.db.de/__cypress/runner/cypress_runner.js:3500:14)",
+                "diff": null
+              },
+              "uuid": "ee7be023-ac3b-4821-a3fa-c8865c670913",
+              "parentUUID": "9ebc2f7c-fb52-4d6a-bb89-c49e53bdc122",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [],
+          "failures": [
+            "ee7be023-ac3b-4821-a3fa-c8865c670913"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 60322,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "report",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "charts": true,
+        "reportDir": "cypress/results",
+        "reportFilename": "report",
+        "overwrite": false,
+        "html": true,
+        "json": true,
+        "embeddedScreenshots": true,
+        "inlineAssets": true
+      },
+      "version": "6.2.0"
+    }
+  }
+}
